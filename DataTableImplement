@@ -1,0 +1,66 @@
+public DimAccountModal2 GetDimAccountDataTable()
+{
+    DataSet Dt = new DataSet();
+    DimAccountModal2 DimAccountModal2Obj = new DimAccountModal2();
+    List<DimAccountModal> DimAccountModalList = new List<DimAccountModal>();
+
+    try
+    {
+        SqlParameter[] parameters =
+                                       {
+                                        new SqlParameter("@ID",""),
+                                        new SqlParameter("@Name",""),
+                                    };
+
+              Dt = _CommonRepo.ExecuteDataset("[dbo].[GetDimAccountWithParameter]",parameters);
+
+        if (Dt != null)
+        {
+            #region   Type 1
+            //DimAccountModal2Obj.DimAccountModalList = Dt.Tables[1].AsEnumerable().Select(r => new DimAccountModal
+            //{
+            //    AccountKey = r.Field<int?>("AccountKey"),
+            //    ParentAccountKey = r.Field<int?>("ParentAccountKey"),
+            //    AccountCodeAlternateKey = r.Field<int?>("AccountCodeAlternateKey"),
+            //    ParentAccountCodeAlternateKey = r.Field<int?>("ParentAccountCodeAlternateKey"),
+            //    AccountDescription = r.Field<string>("AccountDescription"),
+            //    AccountType = r.Field<string>("AccountType"),
+            //    Operator = r.Field<string>("Operator"),
+            //    CustomMembers = r.Field<string>("CustomMembers"),
+            //    ValueType = r.Field<string>("ValueType")
+            //}).ToList();
+
+            #endregion
+
+            //DimAccountModal2Obj.DimAccountModalList = _mapper.Map<IList<DimAccountModal>>(Dt.Tables[1]).ToList();
+            //DataTable dataTable = CreateDataTable(listOfSuperheroesRealIdenties);
+
+        }
+        
+    }
+    catch (Exception ex)
+    {
+
+    }   
+    return DimAccountModal2Obj;
+}
+ public  DataSet ExecuteDataset(string commandText, SqlParameter[] parameters)
+ {
+     DataSet resultSet = new DataSet();
+     using (var conn = _DbEngine.Database.GetDbConnection())
+     {
+         conn.Open();
+         var command = conn.CreateCommand() as SqlCommand;
+         command.CommandText = commandText;
+         command.CommandType = CommandType.StoredProcedure;
+         foreach (var parameter in parameters)
+         {
+             command.Parameters.Add(parameter);
+         }
+         SqlDataAdapter adapter = new SqlDataAdapter(command);
+         adapter.Fill(resultSet);
+     }
+     return resultSet;
+ }
+
+
